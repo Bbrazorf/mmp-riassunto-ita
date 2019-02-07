@@ -70,9 +70,7 @@ tabsize=2
 \begin{document}
 \begin{multicols}{5}
   \noindent
-  \textbf{Multimedia Processing - Riassunto} \\
-  \gitAbbrevHash - \gitAuthorIsoDate \\
-
+  \textbf{SUPSI I3AB 2018/2019 ©} \\
     \section{Suono}
     Forma di energia, sulla terra vibrazione = suono. \\
     \textbf{Velocità}\quad 0° C:\quad $340.27\ [m/s]$,
@@ -157,6 +155,11 @@ tabsize=2
     \end{equation*}
     \noindent
     L'uomo sente da $20$ Hz a $20$ kHz, con percezione migliore fra i $3$ e $4$ kHz.
+
+    \subsubsection{A-weighting (dBA)}
+    Per adattare le misure di livello sonoro alla differente percezione che l’essere
+    umano ha delle frequenze vengono usate delle pesature. La più comune è l’
+    A-weighting utilizzata nel dBA.
 
     \subsubsection{Fase}
     Varia a dipendenza dell'istante in cui l'onda comincia la propria oscillazione.
@@ -290,6 +293,11 @@ tabsize=2
     Capita quando si campionano frequenze oltre alla frequenza di Nyquist.
     Le freq. oltre alla freq. massima vengono riflesse all'interno dello spettro
     generando freq. inesistenti.
+
+    \subsection{Jittering}
+    Il sampling jitter è una lieve variazione nella precisione dei clock dei 
+    convertitori ADC o DAC. Questa lieve alterazione può modificare lo spettro delle 
+    fasi del segnale rovinandolo.
 
     \subsection{Total Harmonic Distortion (THD)}
     Valore RMS degli armonici prodotti dai convertitori relativi al livello RMS di
@@ -838,8 +846,7 @@ tabsize=2
     \begin{itemize}
       \item Frame differencing (sottrazione tra pixel dell’immagine attuale e quella di 
       background).
-      \item Mean filter (tecnica di analisi non parametrica per identificare i maxima 
-      (detti modes) di una funzione di densità).
+      \item Mean filter
       \item Gaussian average.
     \end{itemize}
 
@@ -847,6 +854,11 @@ tabsize=2
     Tecnica di video tracking che associa gli oggetti in frames video consecutivi. I 
     componenti principali sono: rappresentazione e localizzazione del target, 
     filtraggio e associazione dei dati.
+
+    \subsubsection{Mean shift}
+    Tecnica di analisi non parametrica per identificare i maxima (detti modes) di 
+    una funzione di densità.
+
     \section{Audio e Video Streaming}
     \subsection{Broadcasting}
     Distribuzione contenuti audio/video tramite un mezzo di comunicazione (onde radio) con modello 1-molti.
