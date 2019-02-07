@@ -687,9 +687,9 @@ tabsize=2
       \textbf{Nel cinema} 2K (2048×1080 quindi 2.2 megapixels) o 4K (4096×2160 quindi 
       8.8 megapixels). \\
       \textbf{Nelle televisioni e nei monitor} SD (Standard Definition): 576i, sistema 
-      PAL/SECAM Europeo, 480i, sistema NTSC Americano; HD (High Definition): 720p - 
+      PAL/SECAM Europeo, 480i, sistema NTSC Americano, HD (High Definition): 720p - 
       1280×720p progressive scan quindi 921’600 pixels, 1080i - 1920×1080i interlacciato 
-      quindi 1’036’800 pixels, 1080p - 1920×1080p quindi 2’073’600 pixels; UHD (Ultra 
+      quindi 1’036’800 pixels, 1080p - 1920×1080p quindi 2’073’600 pixels, UHD (Ultra 
       High Definition): 4K - 3840×2160 progressive scan, True 4K - 4096×2160, 8K - 
       7680×4320, True 8K - 8192×4320.
     \subsection{Aspect ratio}
@@ -701,6 +701,79 @@ tabsize=2
       \item 21:9 è un formato cinematografico recente utilizzato oggi negli 
       ultra-wide monitors.
     \end{itemize}
+    
+    \subsection{Framerate}
+    Frequenza con cui le immagini vengono mostrate in un filmato. 
+
+    \subsection{Video processing}  come l’image processing si utilizzano tecniche di 
+    filtraggio dei segnali applicandole a streams di tipo video. Le tecniche di video 
+    processing vengono impiegate per: modifica dell’aspect ratio, zoom digitale, 
+    aggiustamento di brightness, contrast, hue, saturation, sharpness, gamma, 
+    conversione del frame rate, aggiustamento del colore, riduzione del rumore, 
+    tecniche di upscaling. \\
+    Le tecniche attuate a livello di singola immagine vengono dette tecniche di 
+    \textit{intra-frame processing}. Mentre quelle che sfruttano l’informazione 
+    temporale esistente fra più immagini in sequenza vengono dette tecniche di 
+    \textit{inter-frame processing}.
+
+    \subsubsection{Formati di codifica e compressione video}
+    Modo di rappresentare i dati per il salvataggio e la trasmissione. Sono 
+    definiti da una specifica e il programma che li codifica prende il nome di 
+    codec (MPEG-2 Part 2, MPEG-4 Part 2, H.264 (MPEG-4 Part 10), HEVC e RealVideo RV40).
+
+    \subsubsection{Formati container per il multimedia}
+    Contengono il video combinato con uno stream audio (AVI, MP4, FLV, RealMedia, 
+    Matroska, o QuickTime).
+
+    \subsubsection{Compressione video}
+    Esistono sia compressori lossy che lossless. Alcuni formati video come il 
+    Dirac e l’H264 permettono entrambe le tipologie.
+
+    \subsubsection{Formati intra-frame}
+    La compressione viene applicata esclusivamente alle singole immagini senza 
+    approfittare della correlazione tra immagini successive. Questa soluzione è meno 
+    computationally intensive delle soluzioni che applicano interframe prediction.
+
+    \subsubsection{Inter-frame prediction}
+    I video contengono molta informazione ridondante spaziale, ma soprattutto temporale. 
+    Algoritmi di compressione come H.264 sfruttano questa ridondanza con tecniche 
+    di inter-frame prediction che gli permettono di raggiungere rapporti di compressione 
+    di 1:50.
+
+    \subsubsection{Motion JPEG}
+    Formato di compressione video intraframe in cui ogni frame è compresso come 
+    immagine JPEG ha un’efficienza limitata a 1:20. 
+
+    \subsubsection{Computer Vision}
+    Tecnologie e metodi per acquisire, modificare ed analizzare immagini con lo 
+    scopo di estrapolare informazioni per poter prendere decisioni in maniera automatica.
+
+    \subsubsection{Struttura di un sistema di computer vision}
+    \begin{enumerate}
+      \item Acquisizione dell’immagine
+      \item Pre-processing: rimozione del rumore, l’adeguamento del contrasto, ecc.
+      \item Estrazione delle feature: estrazione di caratteristiche (linee, contorni).
+      \item Detection/Segmentation: decidere quali punti o regioni dell’immagine sono 
+      rilevanti.
+      \item Processing di tipo high-level: classificare gli oggetti, determinarne 
+      posizione, dimensione …
+    \end{enumerate}
+    
+    \subsubsection{Background substraction}
+    Estrae gli elementi in primo piano all’interno di un video confrontando il frame 
+    corrente con un frame di riferimento (background). Tecniche di background subtraction: 
+    \begin{itemize}
+      \item Frame differencing (sottrazione tra pixel dell’immagine attuale e quella di 
+      background).
+      \item Mean filter (tecnica di analisi non parametrica per identificare i maxima 
+      (detti modes) di una funzione di densità).
+      \item Gaussian average.
+    \end{itemize}
+
+    \subsubsection{Video motion Traking}
+    Tecnica di video tracking che associa gli oggetti in frames video consecutivi. I 
+    componenti principali sono: rappresentazione e localizzazione del target, 
+    filtraggio e associazione dei dati.
     \section{Audio e Video Streaming}
 
     \section{Gstreamer}
