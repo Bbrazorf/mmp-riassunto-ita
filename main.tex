@@ -1,0 +1,774 @@
+\documentclass[8pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage[margin=0.5cm, landscape]{geometry}
+%\usepackage{roboto}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{tabu}
+\usepackage{gitinfo2}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{scrextend}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+
+%\makeatletter
+%\input{\encodingdefault RobotoSlab-LF.fd}
+%\DeclareFontShape{\encodingdefault}{\familydefault}{l}{it}{
+% <->ssub*Roboto-LF/l/it
+%}{}
+
+\changefontsizes{5pt}
+
+\setmainfont{Roboto Light}
+\setmathfont{STIX Two Math}
+\setmathfont{STIX Two Math}[version=script,StylisticSet=1]
+
+\setlist[enumerate]{leftmargin=3mm, noitemsep}
+\setlist[itemize]{leftmargin=3mm, noitemsep}
+
+\graphicspath{{figures/}}
+
+\usemintedstyle[java]{monokai}
+\usemintedstyle[shell-session]{monokai}
+\newminted[code]{java}{autogobble,
+breaklines, 
+frame=single,
+bgcolor=black,
+style=monokai,
+tabsize=2
+}
+\newcommand{\m}[1]{\mintinline[bgcolor=black]{java}{#1}}
+\newcommand{\f}[1]{
+      \begin{figure}[H]
+        \center
+      \includegraphics[width=0.5\columnwidth]{#1}
+      \end{figure}
+}
+\AtBeginEnvironment{code}{
+    \fontsize{5}{5}\selectfont}
+
+\DeclareMathOperator{\di}{d\!}
+
+% LstListings
+\usepackage{xcolor}   % for \textcolor
+
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{1pt}{0pt}
+\titlespacing*{\subsection}{0pt}{1pt}{0pt}
+
+
+\setlength{\columnseprule}{0.2pt}
+\setlength{\columnsep}{10pt}
+\renewcommand{\columnseprulecolor}{\color{lightgray}}
+
+
+\begin{document}
+\begin{multicols}{5}
+  \noindent
+  \textbf{Multimedia Processing - Riassunto} \\
+  \gitAbbrevHash - \gitAuthorIsoDate \\
+
+    \section{Suono}
+    Forma di energia, sulla terra vibrazione = suono. \\
+    \textbf{Velocità}\quad 0° C:\quad $340.27\ [m/s]$,
+    \quad 20° C:\quad $343\ [m/s]$ (mach 1). \\
+    Nell'acqua, il suono viaggia 4.3 volte più veloce che nell'aria.
+    Nel vuoto non c'è suono. Oggetti a velocità superiore a mach 1 viaggiano a
+    velocità supersonica. \\
+    \subsection{Energia Sonora}
+    Joule [J], il mezzo di propag. (aria, acqua, ...) funge da accumulatore
+    di energia, sia potenziale che cinetica.
+    \begin{equation*}
+      W = W_{\text{potential}} + W_{\text{kinetic}} = \int_V \frac{p^2}{2\rho_0c^2} \di V
+      + \int_V \frac{\rho v^2}{2} \di V
+    \end{equation*}
+    dove:\\
+    \begin{tabular}{l l}
+      $V$ & è il volume d'interesse\\
+      $p$ & è la pressione sonora\\
+      $v$ & è la velocità delle particelle\\
+      $\rho_0$ & è la densità del mezzo in assenza di suono\\
+      $\rho$ & è la densità locale del mezzo\\
+      $c$ & è la velocità del suono
+    \end{tabular}
+    \subsection{Pressione Sonora}
+    Detta anche pressione acustica, è rappr. dalla variazione di pressione esercitata
+    dal suono rispetto alla pressione atmosferica ambientale.
+    Unità di misura: Pascal [Pa]
+    \begin{equation*}
+      p_{\text{total}} = p_{\text{stat}} + p 
+    \end{equation*}
+
+    \begin{tabular}{ll}
+      $p$ & è la pressione sonora \\
+      $p_{\text{total}}$ & è la pressione totale \\
+      $p_{\text{stat}}$ & è la pressione ambientale
+    \end{tabular}
+
+    \subsection{Pressione Sonora Effettiva (RMS)}
+    Valore medio di pressione istantanea calcolata su un intervallo di tempo
+    definito. La media RMS viene anche detta media quadratica.
+    
+    \subsection{Livello di pressione sonora (SPL)}
+    Valore relativo calcolato come il logaritmo del rapporto fra una data pressione
+    sonora e una pressione sonora di riferimento. Nell'aria si usa $20\ [\mu \text{Pa}]$,
+    $1\ [\mu \text{Pa}]$ per altri mezzi. Si tratta del limite di capacità d'udito 
+    dell'essere umano.
+
+    \subsection{dB SPL}
+    Il livello di pressione sonora si misura in dB SPL:
+    \begin{equation*}
+      L_p = 20 \log_{10} (\frac{p_\text{rms}}{p_\text{ref}})\ \text{dB}
+    \end{equation*}
+    Una pressione RMS di $1\ [\text{Pa}]$ corrisponde ad un livello di $94
+    \ [\text{dB SPL}]$.
+    \subsection{Potenza sonora ($L_w$)}
+    Energia Acustica emessa da una sorgente. Valore assoluto. Indipendente dalla
+    distanza e dalle dim. della stanza. È la potenza totale emessa dalla sorgente
+    in tutte le direzioni. Misurato in dB SWL. Viene utilizzato p.es per misurare
+    la quantità di rumore prodotto dagli utensili di lavoro.
+
+    \subsection{Psicoacustica}
+    Scienza che studia la percezione del suono e la risposta psicologica prodotta.
+    Usata nella localizzazione delle sorgenti sonore, riconoscimento dei timbri e
+    negli effetti di mascheramento. Possiamo ingannare l'orecchio approfittando degli
+    effetti psicoacustici. E.g: stereofonia / compressione psicoacustica dell'MP3.
+
+    \subsection{Suoni}
+    Suoni periodici vs aperiodici.\\
+    \textbf{Ampiezza} determina l'intensità del suono. \\
+    \textbf{Lunghezza d'onda} e \textbf{frequenza}: per i suoni periodici determinano
+    l'altezza (pitch) del suono.\\
+    La frequenza è proporzionale alla lunghezza d'onda. Per una maggiore lunghezza
+    d'onda si avrà una minore frequenza.
+
+    \subsubsection{Periodo e Frequenza}
+    La lunghezza d'onda di un suono ne determina il periodo: è il tempo
+    necessario per completare un ciclo di vibrazione. Più il periodo è lungo, più la
+    frequenza (e di conseguenza la nota) sarà bassa. \\
+    Periodo $T$ misurato in secondi.
+    \begin{equation*}
+      F = \frac{1}{T}\ [\text{Hz}]
+    \end{equation*}
+    \noindent
+    L'uomo sente da $20$ Hz a $20$ kHz, con percezione migliore fra i $3$ e $4$ kHz.
+
+    \subsubsection{Fase}
+    Varia a dipendenza dell'istante in cui l'onda comincia la propria oscillazione.
+    Solitamente inaudibile, ha però un forte effetto quando vengono sommate.
+
+    \subsubsection{Timbro}
+    Anche chiamato colore del suono.
+    Determina il carattere del suono. Strumenti diversi producono suoni di timbro
+    diverso. Timbro più semplice: sintetizzatore di sinusoide, timbro più complesso:
+    rumore bianco. \\
+    La percezione del timbro è determinata da due caratteristiche fisiche: lo spettro 
+    e l’inviluppo.
+
+    \columnbreak
+
+    \subsubsection{Spettro}
+    Ogni suono può essere modellato come combinazione di onde sonore sinusoidali a
+    differenti frequenze. Se un suono contiene freq. che sono multipli di una freq.
+    fondamentale, l'unione di questi suoni viene percepita come un unico suono
+    la cui frequenza è quella fondamentale e il cui carattere è det. dalle freq.
+    e ampiezze coinvolte. \\
+    Per un tono puro (una sinusoide), il grafico è formato da una semplice linea 
+    verticale, per un suono musicale da una serie di linee in corrispondenza alle 
+    freq. fondamentali ed alle armoniche. Per un rumore lo spettro è costituito da una
+    banda di frequenza.
+    
+    \f{noise-types}
+
+    \subsubsection{Inviluppo}
+    Andamento dell'ampiezza nel tempo. Ogni timbro ha un suo particolare inviluppo. \\
+    L’inviluppo di un suono è solitamente composto da 4 fasi, dal momento in cui viene 
+    originato, al momento in cui si estingue: attack, decay, sustain, release.
+
+    \subsubsection{Spettrogramma}
+    Lo spettrogramma è la rappresentazione grafica dell'intensità di un suono in funzione
+    sia del tempo, che della frequenza. È lo strumento migliore per osservare il timbro
+    di un suono. Ne esistono due varianti: bidimensionale e tridimensionale.
+ 
+    \subsubsection{Direzione e distanza dal suono}
+    Il sistema uditivo degli esseri umani è capace di distinguere la direzione di 
+    provenienza e di stimare la distanza della sorgente di un suono. Tendenzialmente 
+    la direzione viene identificata soprattutto sfruttando la differenza tra l’istante 
+    di arrivo del suono ad un orecchio, rispetto all’altro. Mentre per la stima della 
+    distanza, vengono soprattutto sfruttati i riverberi (prodotti dall’ambiente), in
+    particolare l’informazione di predelay (il tempo che intercorre fra l’arrivo del
+    suono diretto e le prime riflessioni).
+    \textbf{Head related transfer function (HRTF)}
+    Quando il suono si scontra con l’ascoltatore, le caratteristiche fisiche dei 
+    ricettori (forma della testa, orecchie, etc.) modificano il suono e quindi la 
+    percezione ottenuta.
+ 
+    \subsubsection{Stereofonia}
+    L’ascolto stereofonico è un inganno psicoacustico in cui vengono utilizzate due
+    sorgenti sonore (correttamente posizionate), con una tecnica di riproduzione in
+    cui i medesimi contenuti sonori vengono riprodotti con differenti ampiezze.
+    Quest’inganno permette di posizionare sorgenti sonore virtuali nello spazio
+    compreso fra i due altoparlanti.
+
+
+    \section{Audio Analogico vs Audio Digitale}
+    \textbf{Analog to Digital Converter (ADC)} Un sistema che converte un segnale 
+    analogico in un segnale digitale. \\
+    \textbf{Digital to Analog Converter (DAC)} Un sistema che converte un segnale 
+    digitale in un segnale analogico.
+
+    \subsection{dBV e dBu}
+    Unità di misura usate per intensità di voltaggio.
+    Sono valori specifici a valori di riferimento. \\
+    dbV: voltaggio RMS relativo a 1 [V]\\
+    dbu: voltaggio RMS relativo a $\sqrt{0.6} V \approx 0.7746 V \approx -2.218 dBV$
+
+    \subsection{Range dinamico}
+    Rapporto fra ampiezza e onda sinusoidale più forte possibile (non distorta)
+    e rumore di fondo (rumore RMS) del sistema in uso. \\
+    Spesso confuso con SNR, che è la differenza fra livello medio del segnale
+    e livello medio del rumore di fondo. Il range dinamico dell'orecchio umano
+    è attorno ai 140 dB. Dai 120 dB a 140 c'è la soglia del dolore.
+
+    \subsection{Livelli ed Headroom}
+    Livelli di voltaggio negli standards sono detti livelli nominali.
+    L'headroom è la differenza fra il livello nominale e il livello massimo,
+    oltre il quale il segnale viene compromesso dalla distorsione.
+
+    \subsection{VU meters}
+    Usati per rappresentare livelli di intensità sonora in apparecchi come mixer.
+    Unità di misura: Volume Unit (VU). In sit. normali, 0VU permette un headroom
+    di almeno 18dB senza distorsione significativi. Solitamente negli apparecchi
+    professionali 0 VU = +4 dBu, mentre in quelli consumer 0 VU = -10 dBV
+
+    \subsection{Range dinamico di segnali digitali}
+    Dettato dall'errore di quantizzazione. 
+    \begin{tabular}{ccccccc}
+      bits & 8 & 12 & 16 & 18 & 20 & 24 \\
+      dB & 48 & 72 & 96 & 108 & 120 & 144 
+    \end{tabular} \\
+    Qualità CD: 96 dB. Esistono algoritmi di noise shaping (dithering) capaci di
+    spostare la perc. del range din. a 120 dB.
+    Per il processing si usano 32 bits, float.
+
+    \subsection{Pulse Code Modulation (PMC)}
+    La tecnica di conversione più utilizzata è quella di PCM: ad essere campionata 
+    a intervalli regolari è l’ampiezza del segnale analogico. Ogni campione viene 
+    quantizzato al valore più vicino all’interno del range dei possibili valori 
+    digitali. \\
+    Esistono quindi due caratteristiche principali di un segnale audio: bit depth e
+    sample rate.
+
+    \subsubsection{Bit Depth}
+    Quantità di bits utilizzati, influenza la qualità sonora in termini di dinamica
+    massima acquisibile.
+
+    \subsubsection{Sample Rate}
+    Frequenza di campionatura. Con 44.1 kHz è possibile campionare freq. fino ad un
+    massimo di 22050 Hz.
+
+    \subsubsection{Nyquist-Shannon}
+    \begin{equation*}
+      F_s = 2 \cdot F_{max}
+    \end{equation*}
+    
+
+    \subsection{Decibels Full-Scale (dbFS)}
+    Per misurare l’ampiezza dei segnali digitali viene utilizzata l’unità di misura
+    dBFS. È un’unità di misura che mette in relazione l'ampiezza del segnale con 
+    l’ampiezza del picco massimo permesso da quel sistema (detto il full-scale). Oltre 
+    alla soglia del full-scale interviene il clipping, una forma di distorsione molto 
+    aggressiva. Al full-scale è assegnato il valore di 0 dBFS, quindi tutti i valori 
+    più piccoli del massimo sono negativi.
+
+    \subsection{Aliasing}
+    Capita quando si campionano frequenze oltre alla frequenza di Nyquist.
+    Le freq. oltre alla freq. massima vengono riflesse all'interno dello spettro
+    generando freq. inesistenti.
+
+    \subsection{Total Harmonic Distortion (THD)}
+    Valore RMS degli armonici prodotti dai convertitori relativi al livello RMS di
+    un segnale di input sinusoidale vicino a full-scale.
+
+    \subsection{Formati audio per files}
+    \begin{itemize}
+      \item Formati non compressi (Dati PCM/RAW, .wav, .aiff, .au) 
+      \item Formati con compressione lossless (Simil-zip, .flac, .ape, .wv)
+      \item Formati con compressione lossy (.mp3, .aac, .opus)
+    \end{itemize}
+    \noindent
+    PCM, 16 bits, 44.1 kHz, stereo: $16 \cdot 44100 \cdot 2 = 1411200\ \text{bps}$\\
+    MP3 256, comprime al massimo $256$ kbps
+
+    \section{Tecniche base di audio processing}
+    \subsection{Nozioni}
+    \textbf{Risposta impulsiva} La risposta impulsiva di un sistema è una funzione 
+    (del tempo) che coincide con l’output del sistema se sollecitato con un impulso. \\
+    \textbf{Risposta in frequenza} La risposta in frequenza è una misura quantitativa 
+    dello spettro di output di un sistema, utilizzata per caratterizzare la dinamica 
+    del sistema. \\
+    \textbf{Risposta in fase} In maniera simile alla risposta in frequenza è possibile 
+    rappresentare la risposta in fase: mette in relazione le differenze di fase fra il 
+    segnale di input e quello di output di un sistema.
+
+    \subsection{Trasformata di Fourier}
+    Scompone una funzione del tempo (quindi un segnale) nelle frequenze che la
+    compongono. Risulta una funzione di numeri complessi, il cui valore assoluto
+    rappresenta l'ampiezza di ogni frequenza del segnale, mentre l'argomento
+    complesso è la differenza di fase dalla sinusoide di quella determinata frequenza.\\
+    Permette quindi di passare dal dominio del tempo al dominio delle frequenze.
+    La sua inversa si chiama sintesi di Fourier.
+
+    \subsection{Filtri: Sistemi LTI (Linear Time Invariant System)}
+    \textbf{Time-invariant} Sistema che dato un input in diversi istanti di tempo, 
+    restituisce lo stesso output. \\ \\ 
+    Nella realtà, molti sistemi possono però essere modellati per semplicità come 
+    sistemi LTI, trascurando le eventuali non-linearità. I sistemi LTI sono importanti 
+    perché possono essere risolti con metodologie di signal processing. E’ possibile 
+    realizzare filtri con l’FFT, alternative più efficaci sono i filtri FIR e IIR.
+
+
+    \subsubsection{Filtro FIR}
+    Un filtro con finite impulse response (FIR) è un filtro la cui risposta
+    impulsiva (o risposta a qualsiasi input di lunghezza finita) è di durata finita,
+    perché l'output va automaticamente a 0 in un tempo finito.
+    La risposta impulsiva di un FIR di ordine $N$ dura esattamente $N + 1$ campioni.
+
+    \subsubsection{Filtri IIR}
+    Filtri con risposta impulsiva infinita. A differenza di FIR hanno un feedback,
+    per questo motivo la risposta in freq. dei filtri IIR è migliore di quella dei
+    filtri FIR dello stesso ordine.
+    IIR sono più efficienti e possono essere facilmente parametrizzati in tempo reale.
+    La risposta in fase non è lineare. Se non vengono disegnati correttamente possono
+    diventare instabili a causa dell'anello di feedback.
+
+    \section{Nozioni base sull'immagine}
+    \subsection{Immagine}
+    Una rappresentazione della percezione visiva umana di un soggetto o di un ambiente.
+    Può essere bidimensionale (foto) o tridimensionale (ologramma). Le immagini 
+    catturano la luce e possono essere generate con dispositivi ottici o dagli umani 
+    tramite l’occhio.
+
+    \subsection{Luce}
+    Radiazione elettromagnetica (EMR) in una certa porzione dello spettro 
+    elettromagnetico. \\
+    \textbf{EMR} Classificata per lunghezza d’onda in radio, micro onde, infrarosso, 
+    luce visibile, ultravioletto, raggi X e raggi gamma . \\
+    \textbf{Lunghezza d'onda} 400 - 700 nm (fra 430 e i 750 THz). \\
+    Energia radiante [J]\\
+    Flusso radiante [W]\\
+    \textbf{Radianza} Watt allo steradiante per metro quadrato. \\
+    \textbf{Luce visibile} Viene emessa e assorbita in piccoli pacchetti chiamati 
+    fotoni, che esibiscono proprietà sia delle onde che delle particelle, questa 
+    caratteristica è la dualità onda-particella. \\
+    \textbf{Ottica} Studio della luce e della sua interazione con la materia 
+    (fenomini ottici come arcobaleno ecc.) \\ 
+
+    \subsubsection{Grandezze per misurare la luce}
+    \textbf{Radiometriche} Relative alla radiazione elettromagnetica, 
+    la misurazione è compito della radiometria. Sono: Energia radiante [J],
+    Flusso radiante [W] e Radianza [W allo  steradiante per $m^2$]. \\
+    \noindent
+    \textbf{Fotometriche} Quantificano l’emissione luminosa partendo dalle 
+    grandezze radiometriche ma mediante pesatura con la curva di risposta 
+    spettrale dell’occhio umano. Sono: Flusso luminoso [Lumen], Intensità 
+    luminosa [Canela], Illuminamento [Lux].
+
+    \subsection{Colori}
+    I colori vengono generati dagli oggetti in funzione della loro capacità
+    di riflettere le varie lunghezze d’onda presenti nella luce visibile.
+    L'occhio umano può distinguere fino a 10M di colori. \\
+    \subsubsection{Modelli}
+    \textbf{Adattiva} somma dei colori derivati dai primari $\rightarrow$ bianco 
+    (somma colori modello RGB). \\ 
+    \textbf{Sottrattiva} somma dei primari (partendo dai secondari) $\rightarrow$ nero 
+    (somma colori modello CMY). \\
+    \f{color-mode}
+    \subsubsection{Parametri}
+    \textbf{Hue} Gradazione o varietà di colore\\
+    \textbf{Colorfulness, Saturation e Chroma (da non confondere con Video Chroma)}
+    Rappresentano l'intensità cromatica\\
+    \textbf{Brightness e Lightness} Rappresentano la percezione di intensità luminosa.\\
+    \textbf{Contrast} rappresenta la differenza in intensità luminosa o colore dell'immagine.
+    \subsubsection{Istogramma dei colori}
+    Rappresentazione della distribuzione dei colori. Se l'immagine è monocromatica
+    $\rightarrow $ istogramma di intensità.
+
+    \subsection{Parallasse}
+    Differenza della posizione apparente di un oggetto visto da due differenti punti di 
+    vista.
+
+    \section{Immagine digitale}
+    \subsection{Vettoriale vs Raster}
+    \textbf{Vettoriali} indipendenti dalla risoluzione, sono però più laboriose da 
+    produrre. \\
+    \textbf{Raster} Non possono essere adattate alle risoluzioni senza perdita di qualità.
+    \subsection{Sensori CCD o CMOS}
+    Charge-Coupled Devices (CCD) e Complementary Metal-Oxide-Semiconductor (CMOS).
+    Un CCD ha un unico amplificatore per ogni pixel.
+    La maggior parte delle camere digitali ha sensori CMOS
+    perché offrono prestazioni migliori, sono più veloci e consumano meno. 
+    I CCD vengono ancora utilizzati per fotocamere digitali a basso costo.
+
+    \subsection{Campionatura e Quantizzazione}
+    Strumenti come i frame grabber permettono di discretizzare le immagini.
+    L'immagine deve essere discretizzata sia spazialmente (sampling)
+    sia in termini di intensità di luce (quantization). \\
+    I fattori che influenzano la digitalizzazione sono:
+    \begin{itemize}
+      \item Sampling rate: determina la risoluzione spaziale
+      \item Livello di quantizzazione: determina la tonalità di grigio o livelli
+        di colore che vengono acquisiti. 
+    \end{itemize}
+
+    \subsection{Risoluzione Spaziale}
+    Misura del più piccolo dettaglio discernibile in un'immagine digitale.
+    Per misurarla si usano i DPI (dots per inches). Affermare che un'immagine ha una
+    risoluzione di MxN pixels non ha un effettivo significato se la risoluzione non è 
+    messa in relazione ad un'unità di misura spaziale.
+
+    \subsection{Risoluzione di intensità}
+    Più piccolo dettaglio discernibile nel livello di intensità di grigio o colore.
+    Per le immagini grayscale vengono d'abitudine usati 8 bits (256 valori), mentre
+    per le immagini a colori si usano 16 bits. L'utilizzo di 32 bits è raro.
+
+    \subsection{Colori nelle Schede Video}
+    Le schede video attuali dedicano 24 bits per pixel, mostrando quindi $2^{24} = 16M$
+    di colori. 24 bit (16M di colori) è chiamato True Color.
+
+    \subsection{Aliasing}
+    L'introduzione di artefatti durante la ricostruzione di un segnale
+    che, prima di venir campionato, conteneva oggetti più piccoli della metà
+    del sampling rate (Nyquist). Nelle immagini la freq. è in relaz. alla dimensione
+    strutturale. Parti piccole hanno freq. alta. Nelle immagini l'aliasing è spaziale.
+
+    \subsection{Dither}
+    Forma di rumore introdotta intenzionalmente per rendere casuale l'errore di
+    quantizzazione.
+    
+    \subsection{Interpolazione}
+    L’interpolazione è un'operazione spesso utilizzata per le immagini per eseguire 
+    zoom, rotazioni, e altre correzioni geometriche. Viene eseguita utilizzando 
+    informazioni conosciute in determinate posizioni per stimare i valori di 
+    posizioni sconosciute.
+    
+    \f{interpolation}
+
+    \subsection{Relazioni fra pixels}
+    \textbf{Vicinanza} ogni pixel ha 2 vicini verticali, 2 vicini orizzontali e 4 vicini
+    diagonali. \\
+    \textbf{Adiacenza} due pixels sono adiacenti se sono vicini e rispettano determinati
+    vincoli di prossimità di grigio o colore.
+
+    \subsection{Distanza fra pixel}
+    Euclidian Distance, City-Block distance, Chess-Board distance.
+    
+    \subsection{Formati file per immagini digitali}
+    Raster: .gif, .jpg, .tiff, .png, .bmp
+
+    \subsubsection{GIF}
+    Crea una tabella fino a 256 colori, da un pool di 16M. Se l'immagine ha meno di 256
+    colori l'algoritmo è capace di riprodurre l'immagine in maniera esatta.
+    Per i casi in cui l'immagine contiene più di 256 colori, alcuni algoritm. 
+    usano il colore più vicino mentre altri l'"error diffusion" per minimizzare
+    l'errore. GIF sostituisce eventuali patterns (ampie zone di colore uniforme)
+    con delle abbreviazioni (come $\text{bianco} \cdot 20$). Di conseguenza
+    GIF è lossless solo per immagini con 256 colori o meno. Per immagini
+    True Color può perdere il 99.998\% dei colori.
+
+    \subsubsection{JPG}
+    Formato ottimizzato per la fotografia ed immagini, contenenti colori simili
+    in zone contigue.
+    Lavora scartando informazione che l'occhio umano non dovrebbe notare.
+    Salva l'informazione come colore a 24 bit. Compressione lossy, livello di compr.
+    adattabile.
+
+    \subsubsection{TIFF, PNG, BMP}
+    \textit{TIFF} è un formato flessibile che può essere sia lossless che lossy.
+    Viene principalmente usato senza nessun tipo di compressione.
+    I dettagli dell'algoritmo utilizzato vengono salvati sul file.
+    \\
+    \textit{PNG} è lossless. Riduce la taglia del file cercando patterns che può sfruttare
+    per il salvataggio dell'informazione.\\
+    \textit{BMP} formato proprietario non compresso inventato da Microsoft. \\
+
+    \subsection{Header e Container}
+    Nelle immagini i file sono composti da una prima parte di meta informazione, 
+    contenente le caratteristiche dell’informazione salvata, seguita dagli effettivi 
+    dati dell’immagine.
+
+
+    \subsection{Operazioni Array vs Matriciali}
+    Le immagini raster possono essere viste come matrici. Su di esse è possibile
+    eseguire operazioni di tipo array, sia matriciali. Ad es: il prodotto di due
+    matrici può essere inteso come prodotto array (ogni elemento delle due matrici viene
+    moltiplicato), oppure come l'effettivo prodotto matriciale.\\
+    Di norma, nel digital signal processing si intendono le operazioni come
+    operazioni di tipo array.
+
+    \subsection{Operazioni lineari vs. Non lineari}
+    Per un filtro lineare (ad esempio la media) si ha che:
+    \begin{equation*}
+      F_m (A + \lambda B) = F_m(A) + \lambda F_m(B)
+    \end{equation*}
+    Questa proprietà non viene invece soddisfatta dai filtri non lineari, come ad
+    esempio la mediana.
+
+    \subsection{Linear Image Processing}
+    Le op. di linear image processing sono basate, come per il signal processing,
+    su due op. fondamentali: la convoluzione e la trasformata di Fourier.\\
+    Nell'image processing la conv. è l'op. più importante perché le immagini hanno
+    l'informazione codificata nel dominio spaziale anziché quello delle frequenze.\\
+    Filtri lineari possono ad es. venir utilizzati per:
+    accentuare gli spigoli degli oggetti, ridurre il rumore di fondo.
+    correggere l'illuminazione, ecc...
+    Queste operazioni vengono eseguite per convoluzione tra l'immagine originale
+    e un kernel di filtro, producendo l'immagine filtrata.
+
+    \subsection{Analisi di Fourier}
+    Meno utile per le immagini. Converte l'informazione chiara del dom. spaziale
+    in una forma poco intellegibile nel dominio delle frequenze.
+
+    \section{Tecniche base di image processing}
+
+    \subsection{Digital Image Processing}
+    \subsubsection{Equalizzazione dell'istogramma}
+    È un metodo dell’image processing per l’adeguamento del contrasto. L'obiettivo
+    è di ridistribuire le intensità nell'istogramma, fornendo, come conseguenza, 
+    maggiore contrasto a zone che hanno basso contrasto locale. \\
+    \textbf{Normalizzazione dell’immagine} 
+    È un processo simile all’equalizzazione 
+    dell’istogramma, in cui vengono modificate le intensità dei pixels (estendendone
+    il range) per ottenere una migliore occupazione del range dinamico disponibile.
+    \subsubsection{Blur}
+    \textbf{Filtri digitali tramite convoluzione o DFT} 
+    Per blur e sharpening si utilizzano tecniche di convoluzione o di DFT. Il 
+    filtraggio può essere eseguito nel dominio spaziale tramite convoluzione, 
+    applicando dei kernels, o nel dominio delle frequenze, tramite la 
+    trasformata di Fourier (DFT). \\
+    \textbf{Gaussian blur}
+    Una sfocatura gaussiana si ottiene applicando all’immagine una funzione gaussiana 
+    tramite convoluzione, facendo ciò si riduce il rumore ma anche la presenza di 
+    dettagli nelle immagini. \\
+    \textbf{Box blur}
+    Un box blur è un filtro passa basso nel dominio spaziale, in cui ogni pixel
+    è la media dei suoi vicini nell’immagine di partenza. Sono specificati tramite
+    una matrice 3X3. \\
+    \textbf{Sharpening}
+    Un’immagine è a fuoco se ha buona risoluzione e un buon contrasto sui contorni 
+    (edges). Lo sharpening permetti di migliorare/peggiorare questo contrasto. \\
+    \textbf{Convoluzione}
+    Nel trattamento d’immagine, la convoluzione è il processo di aggiungere ogni 
+    elemento ai propri vicini, moltiplicato per i valori specificati in un kernel 
+    di dimensione 3x3.
+    \subsubsection{Kernel}
+    I kernel usati nella convoluzione vengono anche detti matrici di convoluzione
+    o maschere. Possono essere utilizzati per implementare una moltitudine di filtri,
+    incluse alcune soluzioni per la detezione dei contorni.
+    \f{kernels}
+    \textbf{Normalizzazione del kernel} 
+    La normalizzazione dei valori di un kernel è definita come la divisione di ogni 
+    elemento del kernel per la somma di tutti gli elementi del kernel, in modo che 
+    la somma di tutti i valori all’interno del kernel dia 1. Questa soluzione garantisce 
+    che che i pixels siano in media luminosi nell’immagine risultante quanto lo sono 
+    nell’immagine originale.
+    \subsection{Detezione dei contorni}
+    Il riconoscimento dei contorni (Edge detection) ha lo scopo di marcare i punti in 
+    cui l'intensità luminosa cambia bruscamente. L'obbiettivo di questa tecnica è quella
+    di rilevare i contorni quindi qualsiasi dettaglio non utile alla definizione di una
+    forma o caratteristiche strutturali viene scartato.
+    \subsection{DFT 2D}
+    F è il risultato (lo spettro) della trasformata di Fourier dell'immagine f.
+    L’operazione inversa permette di ricostruire l’immagine a partire dallo spettro.
+    Il fatto che la modellazione eseguita dalla DFT sfrutti segnali periodici può 
+    presentare delle complicazioni nel caso delle immagini, visto che non presentano 
+    necessariamente periodicità. In maniera simile alla convoluzione, La DFT 2D 
+    viene utilizzata per applicare varie tipologie di filtri.
+    \subsection{Denoise}
+    Immagini acquisite con camere digitali o convertite da film fotografico 
+    convenzionale, contengono rumore introdotto da una moltitudine di fattori per es.
+    quelli dati dai circuiti elettrici. Molto frequentemente il processing di queste 
+    immagini richiede la rimozione (almeno parziale) di questo rumore, questo processo
+    si chiama denoise.
+    \subsection{Rumore salt-and-pepper}
+    Il rumore di tipo salt-and-pepper, anche conosciuto come rumore impulsivo, causa 
+    disturbi improvvisi e netti all’interno dell’immagine. Si presenta di norma come 
+    occorrenze sparse di pixels neri o bianchi. Per risolverlo $\rightarrow$ filtro
+    mediano.
+    \subsection{Rumore gaussiano}
+    Il rumore gaussiano ha una distribuzione statistica di tipo normale. 
+    \subsection{Restoration: Wiener filter}
+    I filtri più tradizionali eseguono la separazione tra segnale e rumore a condizione 
+    che questi occupino diverse bande di frequenza. Il filtro di Wiener supera questa 
+    limitazione con un approccio statistico. Si assume di avere conoscenza delle varie 
+    caratteristiche e si cerca il filtro LTI il cui risultato sia "il più vicina 
+    possibile" al segnale originale. Questo filtro è spesso utilizzato nel processo
+    di deconvoluzione.
+    \subsection{Segmentazione}
+    La segmentazione è il processo in cui si suddivide un’immagine digitale in più 
+    segmenti (sets di pixel). L'obiettivo è quello di semplificare/modificare la 
+    rappresentazione dell’immagine in qualcosa che sia più facile e sensato 
+    da analizzare.
+    \subsection{Thresholding}
+    Il metodo più semplice per eseguire una segmentazione è chiamato metodo di 
+    sogliatura (Thresholding). Nella sua versione più essenziale, un’immagine 
+    in scale di grigi viene convertita in un’immagine con pixels solo bianchi 
+    o neri. Il valore usato come discriminante è la soglia (Threshold).
+    \subsubsection{Basato sull’istogramma}
+    I metodi di thresholding che sfruttano l’istogramma, sono normalmente efficaci
+    rispetto agli altri metodi, perché necessitano di un solo passaggio di 
+    processing sui pixels. Picchi e valli dell’istogramma vengono utilizzati 
+    per identificare i clusters all’interno dell’immagine.
+    \subsection{K-means}
+    Abbiamo appena fatto Data Science quindi sappiamo tutti come funziona. Si usa
+    per partizionare l'immagine in clusters.
+    \subsubsection{Morphological matematica nell'Image Processing}
+    La morfologia matematica è una teoria e tecnica per l’analisi e il processing 
+    di strutture geometriche fondata sulla teoria degli insiemi, dei reticoli, 
+    sulla topologia e sulle funzioni random.
+    I quattro operatori principali sono: erosioni, dilatazione, apertura e chiusura.
+    \subsubsection{Erosione}
+    In uno spazio euclideo E, L’erosione dell’immagine A con lo structuring element 
+    B è la combinazione di tutti i punti che può raggiungere il centro di B quando 
+    si muove all’interno di A.
+    \f{erosion}
+    \subsubsection{Dilatazione}
+    La dilatazione dell’immagine A con lo structuring element B è la combinazione 
+    di tutti i punti che può raggiungere B quando il centro di B si muove all’interno 
+    di A.
+    \f{dilatation}
+    \subsubsection{Apertura}
+    L'apertura è la traslazione dello structuring element B all'interno di A.
+    \f{open}
+    \subsubsection{Chiusura}
+    La chiusura è il complemento della traslazione dello structuring element B 
+    all’esterno dall’immagine A.
+    \f{closure}
+
+
+    \section{Introduzione GPU e CUDA}
+
+    \section{Programmare le GPU con CUDA}
+
+    \section{Video Processing e Computer Vision}
+    \subsection{Fenomeno Beta-Phi}
+    Il cervello ricostruisce un'esperienza di movimento apparente se vede una 
+    sequenza di immagini quasi identiche a 10/12 FPS.
+    \subsection{Formati}
+      \textbf{Proiettori}
+      \begin{itemize}
+        \item Per i film amatoriali: 8mm, super 8 e 9.5 mm
+        \item Per il cinema: 35mm, 70mm
+      \end{itemize}
+      \textbf{Salvataggio}
+      Betamax, cassette VHS, DVD e dischi Blu-ray ad alta definizione.
+    \subsection{Tecnologie per il display}
+    \begin{itemize}
+      \item CRT (Cathode Ray Tube): tubo sottovuoto contenente uno o più emettitori 
+      di fasci di elettroni accelerati o deflessi su uno schermo fluorescente.
+      \item DLP (Digital Light Processing): tecnologia per video proiettori che 
+      sfrutta micro-specchi digitali.
+      \item PDP (Plasma Display Panel): pannello piatto che utilizza piccole celle 
+      contenenti gas ionizzato caricato elettricamente.
+      \item LCD (Liquid Crystal Display): pannello piatto che utilizza cristalli liquidi 
+      modulati dalla luce generata dietro al pannello. 
+      \item OLED (Organic Light-Emitting Diode): tecnologia che sfrutta la luce emessa 
+      da LED, in combinazione con un elemento elettro-luminescente composto da uno 
+      strato di materiale organico capace di produrre differenti tipi di luce in 
+      risposta a una sollecitazione elettrica.
+    \end{itemize}
+    \subsection{Risoluzione}
+    Rappresentata dalla quantità di pixel orizzontali. 
+      \textbf{Nel cinema} 2K (2048×1080 quindi 2.2 megapixels) o 4K (4096×2160 quindi 
+      8.8 megapixels). \\
+      \textbf{Nelle televisioni e nei monitor} SD (Standard Definition): 576i, sistema 
+      PAL/SECAM Europeo, 480i, sistema NTSC Americano; HD (High Definition): 720p - 
+      1280×720p progressive scan quindi 921’600 pixels, 1080i - 1920×1080i interlacciato 
+      quindi 1’036’800 pixels, 1080p - 1920×1080p quindi 2’073’600 pixels; UHD (Ultra 
+      High Definition): 4K - 3840×2160 progressive scan, True 4K - 4096×2160, 8K - 
+      7680×4320, True 8K - 8192×4320.
+    \subsection{Aspect ratio}
+    Descrive la proporzione fra la larghezza e l’altezza di un’immagine.
+    \begin{itemize}
+      \item 4:3 è il formato utilizzato dall’invenzione della cinematografia, i vecchi 
+      film a 35 mm.
+      \item 16:9 è il formato standard internazionale dell’HDTV e del DVD.
+      \item 21:9 è un formato cinematografico recente utilizzato oggi negli 
+      ultra-wide monitors.
+    \end{itemize}
+    \section{Audio e Video Streaming}
+
+    \section{Gstreamer}
+
+
+
+    \section{Machine Learning}
+    Campo dell'informatica con l'obiettivo di sviluppare funzionalità per rendere
+    i computers capaci di imparare senza che li si programmi in maniera esplicita.
+    La realizzazione di buoni algoritmi di machine learning è però un compito complesso
+    perché riconoscere i patterns può essere difficile e spesso i dati disponibili
+    non sono sufficienti.
+    Tipi di machine learning:
+    \begin{itemize}
+    \item Supervised learning
+    \item Reinforcement learning
+    \item Unsupervised learning
+    \end{itemize}
+    
+    \subsection{Supervised learning}
+    Nel supervised learning all’algoritmo vengono forniti sia esempi di input, che i
+    rispettivi dati di output, da un “educatore” dell’algoritmo. L’algoritmo cerca di
+    scoprire la regola generale che associa gli inputs agli outputs.
+    \f{SupervisedLearning}
+    
+    \subsection{Reinforcement learning}
+    Nelle forme più estreme, come ad esempio nel reinforcement learning, come unica
+    forma di feedback l’output viene approvato o respinto. Il reinforcement learning
+    viene ad esempio sfruttato nei sistemi di guida automatica.
+    \f{ReinforcementLearning}
+    
+    \subsection{Unsupervised learning}
+    Nel unsupervised learning, nessuna informazione viene fornita all’algoritmo, che
+    è costretto a scoprire in maniera autonoma la struttura dei dati in input. È la
+    forma più complessa di machine learning.
+    \f{UnsupervisedLearning}
+    
+    \subsection{Reti artificiali}
+    Una delle famiglie più utilizzate di algoritmi di machine learning è quella delle
+    reti neurali. I calcoli vengono strutturati in termini di gruppi di neuroni artificiali
+    interconnessi, che processano collettivamente l’informazione. Le neural networks
+    utilizzate oggi sono strumenti non lineari per la modellazione di tipo statistico
+    di dati con una certa complessità.\\
+    Vantaggi: generalmente più efficaci e semplici da allenare degli altri algoritmi
+    di machine learning. Offrono più flessibilità di parametrizzazione.\\
+    Svantaggi: la loro natura di tipo black-box può risultare svantaggiosa in casi in cui
+    è necessario il controllo del comportamento dell’algoritmo (predictability). Per di
+    più le reti neurali artificiali sono facilmente soggette ad overfitting. Con pochi dati
+    non identificano la caratteristica generica desiderata ma il caso specifico.
+    Per renderle capaci di generalizzare è necessario allenarle con data sets molto ampi e ben costruiti.
+    
+    \subsection{Deep Learning}
+    La crescita delle capacità di calcolo, la progressiva riduzione del costo dell’hardware
+    e l’evoluzione delle GPUs degli ultimi anni, hanno contribuito allo sviluppo del concetto
+    di deep learning. Vengono utilizzate reti neurali composte da layers multipli. Ogni layer
+    impara a trasformare i dati di input in una rappresentazione ogni volta leggermente più
+    astratta e composta. Nelle soluzioni end-to-end l’intero processo, dai sensori agli attuatori,
+    viene eseguito da un’unica layered o recurrent neural network senza modularizzazione.
+    Vantaggio: capacità di continuare a migliorare le performances all’aumentare dei dati di
+    apprendimento disponibili.\\
+    Per quanto concerne l’ambito del multimedia, oggi esistono applicazioni di successo soprattutto
+    nella computer vision e nel riconoscimento vocale. Ad esempio, il deep learning viene utilizzato
+    con successo nella classificazione di immagini.\\
+    Esempi:
+    \begin{itemize}
+    \item Amazon Rekognition: aggiunge funzionalità di analisi d’immagine alle applicazioni.
+    \item Amazon Transcribe: analizza file audio e li traduce in file di testo.
+    \item Caffe: framework di deep learning veloce, modulare e facile da utilizzare.
+    \end{itemize}
+\end{multicols}
+\end{document}
