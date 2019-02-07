@@ -35,14 +35,14 @@
 
 \usemintedstyle[java]{monokai}
 \usemintedstyle[shell-session]{monokai}
-\newminted[code]{java}{autogobble,
+\newminted[code]{cpp}{autogobble,
 breaklines, 
 frame=single,
 bgcolor=black,
 style=monokai,
 tabsize=2
 }
-\newcommand{\m}[1]{\mintinline[bgcolor=black]{java}{#1}}
+\newcommand{\m}[1]{\mintinline[bgcolor=black]{cpp}{#1}}
 \newcommand{\f}[1]{
       \begin{figure}[H]
         \center
@@ -166,14 +166,12 @@ tabsize=2
     Solitamente inaudibile, ha però un forte effetto quando vengono sommate.
 
     \subsubsection{Timbro}
-    Anche chiamato colore del suono.
-    Determina il carattere del suono. Strumenti diversi producono suoni di timbro
-    diverso. Timbro più semplice: sintetizzatore di sinusoide, timbro più complesso:
-    rumore bianco. \\
+    \noindent
+    Anche chiamato colore del suono. Determina il carattere del suono. Strumenti
+    diversi producono suoni di timbro diverso. Timbro più semplice: sintetizzatore 
+    di sinusoide, timbro più complesso: rumore bianco. \\
     La percezione del timbro è determinata da due caratteristiche fisiche: lo spettro 
     e l’inviluppo.
-
-    \columnbreak
 
     \subsubsection{Spettro}
     Ogni suono può essere modellato come combinazione di onde sonore sinusoidali a
@@ -398,6 +396,19 @@ tabsize=2
     (somma colori modello CMY). \\
     \f{color-mode}
     \subsubsection{Parametri}
+    \textbf{Visione Binoculare} Anche detta stereoscopica o stereopsi, è una 
+    caratteristica del sistema visivo. Avviene in un campo ristretto rispetto 
+    alla normale visione bioculare (pesci); in questa entrambi gli occhi partecipano 
+    alla visione dello stesso soggetto o della stessa area di campo. La parte del 
+    singolo campo visivo monoculare dell'occhio destro, va a sommarsi alla stessa 
+    parte visibile dell'occhio sinistro, formando appunto una immagine binoculare.
+    L'acutezza visiva è maggiore rispetto alla visione monoculare. Il campo visivo 
+    è di circa 95° orizzontali e 80° verticali. \\
+    \textbf{Disparità Binoculare} Gli occhi umani sono separati orizzontalmente da 
+    una distanza interpupillare di circa 50–75 mm quindi ogni occhio ha una visione 
+    leggermente diversa del mondo circostante. La disparità binoculare è la differenza 
+    di posizione fra i punti di proiezione, espressa in gradi (angolo visivo).
+
     \textbf{Hue} Gradazione o varietà di colore\\
     \textbf{Colorfulness, Saturation e Chroma (da non confondere con Video Chroma)}
     Rappresentano l'intensità cromatica\\
@@ -720,21 +731,136 @@ tabsize=2
     dall’host. Quidni l’esecuzione su GPU avviene tramite i kernel che sono 
     programmati sfruttando CUDA. Ogni kernel deve eseguire il minor lavoro possibile. 
     \subsubsection{Esecuzione Del Kernel}
+    Quando un programma CUDA sulla CPU richiama un kernel, i blocchi della griglia 
+    vengono distribuiti a tutti i core della GPU disponibili. Ogni blocco di thread 
+    esegue parallelamente su un multiprocessore e più blocchi di thread possono 
+    essere eseguiti in modo concorrente sullo stesso multiprocessore. Quando i blocchi 
+    di thread terminano, vengono avviati nuovi blocchi sul multiprocessore vuoto. Il 
+    gruppo di thread che esegue un kernel è organizzato come griglia di blocchi di 
+    thread. Queste griglie hanno:
+    \begin{itemize}
+      \item Numero limitato di thread per blocco.
+      \item Consentono di eseguire la singola chiamata di un kernel con più thread 
+      \item I blocchi sono identificabili tramite id.
+      \item I blocchi possono essere array mono o bidimensionali.
+    \end{itemize}
     Il multiprocessore crea, gestisce, schedula ed esegue i thread in gruppi da 
-    32 chiamati wraps. Ogni singolo thread che costituisce un wrap parte dallo 
+    32 chiamati warps. Ogni singolo thread che costituisce un warp parte dallo 
     stesso punto nel programma. Tuttavia, i thread hanno il proprio address counter 
     e il proprio stato dei registri, quindi eseguono in modo indipendente. I thread 
-    sono raggruppati in wraps sempre allo stesso modo. Ogni wrap contiene i thread in 
+    sono raggruppati in warps sempre allo stesso modo. Ogni warp contiene i thread in 
     ordine partendo dal thread con id 0. I blocchi rimangono in esecuzione finche ogni 
-    thread non ha finito il suo lavoro. Un singolo wrap esegue in modo efficiente solo 
+    thread non ha finito il suo lavoro. Un singolo warp esegue in modo efficiente solo 
     se tutti i thread che lo compongono eseguono le stesse istruzioni nello stesso 
     momento, se uno o più thread cambiano “il ramo di esecuzione” in seguito ad una 
     condizione (if) i thread vengono separati e disabilitati per poi essere eseguiti 
-    in modo seriale. Se durante l’esecuzione di un wrap è richiesto a più thread di 
+    in modo seriale. Se durante l’esecuzione di un warp è richiesto a più thread di 
     eseguire un’operazione atomica sulla stessa area di memoria questa operazione 
     verrà eseguita in modo seriale in ordine casuale.
     \f{kernel-exec}
+
+%------------------------------------------------------------------------------------------------------
     \section{Programmare le GPU con CUDA}
+    CUDA fornisce, attraverso API runtime e driver, diverse aggiunte agli ambienti C/C++, ma ha alcune 
+    limitazioni sul device code comparate allo standard completo. Per esempio non supporta i tipi di 
+    informazioni runtime (RTTI)
+    
+    \subsection{CUDA Kernel}
+    Il qualificatore global dichiara una funzione che deve essere un kernel eseguibile con i device CUDA.
+    Questa funzione può essere chiamata solo dall’host. Tutti i kernels devono essere dichiarati con il 
+    tipo di ritorno void. 
+    
+    \subsection{Qualificatori per il Memory Management}
+    \begin{description}
+        \item [\_\_device\_\_] Eseguibile e richiamabile solo da Device. Risiede nella global memory sapce,
+        è  lifetime of an application ed è accessibile da tutti i threads all’interno della griglia e dall’host
+        attraverso la runtime library
+        \item [\_\_global\_\_] Eseguibile sul device, richiamabile solo dall’host
+        \item [\_\_costant\_\_] Risiede nella (global) costant memory space, è lifetime of an App. ed è 
+        accessibile da tutti i threads all’interno della griglia e dall’host
+        \item [\_\_host\_\_] Eseguibile e richiamabile solo da host
+        \item [\_\_shared\_\_] Risiede nella shared memory space del thread block. Ha lifetime sul blocco. 
+        Accessibile da tutti i threads attraverso i blocchi
+    \end{description}
+    
+    \subsection{Chiamare il kernel}
+    \m{Func<<< Dg, Db, Ns >>>(parameter);}
+    
+    \begin{description}
+        \item [Func] Nome funzione da usare
+        \item [Dg] Dimensione del grid geometry (numero di gruppi) -> {\color{red} datatype: dim3}
+        \item [Db] Dimensione dei block geometry (numero di threads in un gruppo) {\color{red} dim3}
+        \item [Ns] (opzionale) numero di bytes nella shared memory allocati dinamicamente. {\color{red} size\_t}
+        \item [dim3] datatype per Dg e Db. Inizializzazione: dim3 grid(512, 512, 1); grid(x,y,z) -> z opzionale = 1
+        \item [Dg.x*Dg.y] Numero di blocchi caricati
+        \item [Db.x*Db.y*Db.z] Numero di threads per blocco
+    \end{description}
+    
+    \subsection{Trovare gli indici}
+    Calcoli per identificare gli indici di spostamento all'interno della matrice che lavora la GPU    
+    
+    \begin{itemize}
+        \item int x = blockIdx.x * blockDim.x + threadIdx.x;
+        \item int y = blockIdx.y * blockDim.y + threadIdx.y; 
+    \end{itemize}
+       
+    
+    \subsection{Variabili Built-in}
+    \begin{description}
+        \item[grimDim] dim3 - dimensione della griglia
+        \item[blockIdx] uint3 - indice del blocco all’interno della griglia
+        \item[blockDim] dim3 - dimensione del blocco
+        \item[threadIdx] uint3 - indice del thread all’interno del blocco
+    \end{description}
+    
+    \subsection{Register Memory}
+    La forma più veloce di memoria sulla GPU, risiede sul multi-core, è unicamente accessibile 
+    dai threads ed è lifetime of the thread.
+    
+    \subsection{Shared Memory}
+    Può essere veloce come un registro quando non ci sono conflitti sui banchi di memoria o 
+    quando si legge dallo stesso indirizzo. Accessibile da qualsiasi thread del blocco 
+    da cui è stato creato. È lifetime of the block.
+    
+    \subsection{Global Memory}
+    Potenzialmente 150x più lenta di un registro o della Shared memory. Bisogna fare attenzione 
+    alla scrittura e lettura quando non sono coerenti tra di loro. Accessibile da entrambi i 
+    lati (host o device). Lifetime of the application.
+    
+    \subsection{Local Memory}
+    È potenzialmente un collo di bottiglia, risiede nella global memory, può essere 150x più lento 
+    di un registro o di una shared memory, è accessibile solo via thread ed è lifetime of the thead. 
+    {\color{red}Usato automaticamente da CUDA per:} register overflow, array addressed.. 
+    e letture nella memoria globale
+    
+    \subsection{Costant Memory}
+    Cached access to global memory, di sola lettura, limitato a 64kb per applicazione, condiviso 
+    da tutti i threads e dall’istruction cache. La  cache è 8kb
+    
+    \subsection{Texture Memory}
+    Cached access to global memory, di sola lettura, L1 shared by multiple processors 
+    (a seconda della generazione) e L2 su tutti i threads. Ottimizzata per accessi 2D. 
+    L1 cache è da 6 a 8 kb (dipende dal processore)
+    
+    \subsection{Syncthreads}
+    \begin{itemize}
+        \item I thread all'interno di un blocco possono cooperare condividendo i dati attraverso 
+        una memoria condivisa e sincronizzano la loro esecuzione per coordinare gli accessi alla memoria
+        \item I punti di sincronizzazione sono specificati nel kernel attraverso la chiamata 
+        {\color{red}\_\_syncthreads()} (eseguito attraverso una  barriera in cui tutti i thread nel blocco devono 
+        attendere prima di poter procedere)
+        \item Per una cooperazione efficiente, la memoria condivisa dovrebbe essere una low-latency 
+        memory vicino a ciascun core del processore {\color{red}\_\_syncthreads()} dovrebbe essere leggero
+    \end{itemize}
+    
+    \subsection{Processing Flow}
+    \begin{enumerate}
+        \item Copia input data dalla GPU memory alla GPU memory
+        \item Carica il programma GPU, lo esegue e fa caching data on chip per la performance
+        \item copia i risultati dalla memoria della GPU alla memoria della CPU
+    \end{enumerate}
+
+
 
     \section{Video Processing e Computer Vision}
     \subsection{Fenomeno Beta-Phi}
@@ -909,7 +1035,7 @@ tabsize=2
      \item Framework open source per la creazione di applicazioni multimediali
      \item Piattaforma altamente modulare sviluppata in C
      \item Multi-platform: Linux-kernel based, Android, MacOS, iOS, Windows
-     \item Esistono dei bindings per vari linguaggi: ad esempio Python, C++, Perl, Ruby, C#, …
+     \item Esistono dei bindings per vari linguaggi: ad esempio Python, C++, Perl, Ruby, C\#, …
      \item Utilizzabile anche da linea di comando
      \item Utilizza un’architettura a plug-ins
      \item Molti elementi quali codecs, container formats, input e output drivers ed effetti sono forniti al momento dell’installazione
@@ -1044,5 +1170,394 @@ tabsize=2
     \item Amazon Transcribe: analizza file audio e li traduce in file di testo.
     \item Caffe: framework di deep learning veloce, modulare e facile da utilizzare.
     \end{itemize}
+
+    \section{Code}
+    \subsection{Lego Identifier}
+    \noindent
+    \begin{minted}[xleftmargin=-15pt,breaklines]{cpp}
+      using namespace std; 
+      using namespace cv;
+      int main(int argc, char **argv) {
+        Mat image,greyImage,threShold,erodeImage,dilateImage;
+        vector <vector<cv::Point>> contours;
+        vector<double> aree;
+        vector<cv::Point> label;
+        cv::Moments M;
+        int x, y;
+        vector<String>colori;
+      image = imread("lego.png", CV_LOAD_IMAGE_COLOR); // Read the file
+        if (!image.data) // Check for invalid input{
+          std::cout << "Could not open or find the image" << std::endl;
+          return -1;}
+      // 1. convert in grayscale and compute a threshold
+        cv::cvtColor(image, greyImage, CV_BGR2GRAY);
+        cv::threshold(greyImage, threShold, 200, 255, cv::THRESH_BINARY_INV);
+      // 2. filter the noise by using one or more morphological filters
+        Mat kernel=cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+        cv:erode(threShold, erodeImage, kernel);
+        cv::dilate(erodeImage, dilateImage, kernel);
+      // 3. find out how to use the findContours algorithm and use it to segment the lego blocks
+        cv::findContours(dilateImage, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        Mat contoursImage = imread("lego.png", CV_LOAD_IMAGE_COLOR);
+        for (int i = 0; i < contours.size(); i++) {
+          cv::drawContours(contoursImage, contours, i, cv::Scalar());
+          label.push_back(contours.at(i).at(0));}
+      // 4. find a way to understand size and color of each lego block
+        for (int i = 0; i < contours.size(); i++) {
+          aree.push_back (cv::contourArea(contours[i]));}
+        //centro delle figure
+        for (int i = 0; i < aree.size(); i++) {
+          M = cv::moments(contours.at(i));
+          x = int(M.m10 / M.m00);
+          y = int(M.m01 / M.m00);
+          Point punto{ x, y };
+          Scalar scalar{ image.at<cv::Vec3b>(punto) };
+          int blu = int(scalar[0]);
+          int green = int(scalar[1]);
+          int red = int(scalar[2]);
+          //adesso classifico i rettangoli per colore
+
+          if (red == 0 && green == 0 && blu == 0) {
+            colori.push_back("Nero");}
+          }}
+        for (int i = 0; i < aree.size(); i++) {
+          if (aree.at(i) > 12000 && aree.at(i) < 16000) {
+            std::stringstream testoLabel;
+            testoLabel << "2x2; " << colori.at(i);
+            cv::putText(image, testoLabel.str(),
+              label.at(i), 
+              cv::FONT_HERSHEY_DUPLEX,
+              1.0,
+              CV_RGB(0, 0, 200), //font color
+              2);}
+      //Same as above
+      // 5. put a text label near each block with its properties (size & color)
+        cv::imwrite("immagine_finale.jpg", image);
+        cv::imshow("image", image);
+        cv::waitKey(0);
+        return 0;}
+    \end{minted}
+    \subsection{CUDA}
+    \begin{minted}[xleftmargin=-15pt,breaklines]{cpp}
+      __global__ static void readChannel(
+        unsigned char * channelData,
+        unsigned char *source,
+        int imageW,
+        int imageH,
+        int channelToExtract,
+        int numChannels)
+      {
+        int y = blockIdx.y * blockDim.y + threadIdx.y;
+        int x = blockIdx.x * blockDim.x + threadIdx.x;
+        int i = (y * (imageW * numChannels)) + (x * numChannels) + channelToExtract;
+        int i_mono = (y * (imageW) + x);
+        channelData[i_mono] = source[i];
+      }
+
+      __global__ static void writeChannel(
+        unsigned char* destination,
+        unsigned char* channelData,
+        int imageW,
+        int imageH,
+        int channelToMerge,
+        int numChannels)
+      {
+        int y = blockIdx.y * blockDim.y + threadIdx.y;
+        int x = blockIdx.x * blockDim.x + threadIdx.x;
+        int i = (y * (imageW * numChannels)) + (x * numChannels) + channelToMerge;
+        int i_mono = (y * (imageW) + x);
+        destination[i] = (channelData[i_mono]);
+      }
+      __global__ void compute_average(
+        unsigned char* h_Dst,
+        unsigned char* h_Src,
+        int imageW,
+        int imageH)
+      {
+        const unsigned int numElements = ((2 * KERNEL_RADIUS) + 1) * ((2 * KERNEL_RADIUS) + 1);
+        // Calculate index
+        int y = blockIdx.y * blockDim.y + threadIdx.y;
+        int x = blockIdx.x * blockDim.x + threadIdx.x;
+        unsigned int sum = 0;
+        for (int kY = -KERNEL_RADIUS; kY <= KERNEL_RADIUS; kY++) {
+          const int curY = y + kY;
+          if (curY < 0 || curY > imageH) {
+            continue;
+          }
+          for (int kX = -KERNEL_RADIUS; kX <= KERNEL_RADIUS; kX++) {
+            const int curX = x + kX;
+            if (curX < 0 || curX > imageW) {
+              continue;
+            }
+            const int curPosition = (curY * imageW + curX);
+            if (curPosition >= 0 && curPosition < (imageW * imageH)) {
+              sum += h_Src[curPosition];
+            }
+          }
+        }
+        h_Dst[y * imageW + x] = (unsigned char)(sum / numElements);
+      }
+
+      void average_gpu(
+        unsigned char* inputImage,
+        unsigned char* outputImage,
+        int imageW,
+        int imageH,
+        int numChannels
+      ) {
+        int size = imageW * imageH * numChannels * sizeof(unsigned char);
+        unsigned char* d_inputImage;
+        unsigned char* d_outputImage;
+        cudaMalloc((void **)&d_inputImage, size);
+        cudaMalloc((void **)&d_outputImage, size);
+        unsigned char* d_in_channel;
+        unsigned char* d_out_channel;
+        cudaMalloc((void **)&d_in_channel, size / numChannels);
+        cudaMalloc((void **)&d_out_channel, size / numChannels);
+        int curChannel;
+        dim3 dimBlock(16, 16);
+        dim3 dimGrid(imageW / dimBlock.x, imageH / dimBlock.y);
+        cudaMemcpy(d_inputImage, inputImage, size, cudaMemcpyHostToDevice);
+        for (curChannel = 0; curChannel < numChannels; curChannel++) {
+          readChannel<<<dimGrid, dimBlock>>>(d_in_channel, d_inputImage, imageW, imageH, curChannel, numChannels);
+          compute_average<<<dimGrid, dimBlock>>>(d_out_channel, d_in_channel, imageW, imageH);
+          writeChannel<<<dimGrid, dimBlock>>>(d_outputImage, d_out_channel, imageW, imageH, curChannel, numChannels);
+        }
+        cudaMemcpy(outputImage, d_outputImage, size, cudaMemcpyDeviceToHost);
+        cudaFree(d_in_channel);
+        cudaFree(d_out_channel);
+      }
+    \end{minted}
+    \subsection{Video Processing (Tracker)}
+    \begin{minted}[xleftmargin=-15pt,breaklines]{cpp}
+      using namespace std;
+      using namespace cv;
+
+      int main(int argc, char **argv) {
+        unsigned long frameNumber = 0;
+        Rect trackWindowLeft = Rect(60, 170, 100, 100);
+        float xLeft = 70;
+        int cntLeft = 0;
+        int cntAutoLeft = 0;
+        Rect trackWindowRight = Rect(810, 130, 100, 100);
+        float xRight = 830;
+        int cntRight = 0;
+        int cntAutoRight = 0;
+        VideoCapture cap("./../videoauto.mp4");
+        if (!cap.isOpened())
+          return -1;
+        namedWindow("video", 1);
+        Mat frame, grayScaleFrame, fgMaskMOG2, filterFrame, thresholdFrame;
+        Rect trackWindow, trackWindow1;
+        RotatedRect trackBoxPrec, trackBoxPrec1;
+        trackWindow = Rect(880, 180, 20, 20);
+        trackWindow1 = Rect(74, 210, 30, 30);
+        Ptr<BackgroundSubtractor> pMOG2;
+        pMOG2 = createBackgroundSubtractorMOG2();
+        for (;;) {
+          frameNumber++;
+          cap >> frame;
+          if (frame.rows == 0 && frame.cols == 0) {
+            cout << "last frame!" << endl;
+            break;
+          } 
+          // 1. convert in grayscale 
+          cvtColor(frame, grayScaleFrame, CV_BGR2GRAY);
+          // 2. use the background subtraction MOG2 algorithm to obatin the fore ground image 
+          pMOG2->apply(grayScaleFrame, fgMaskMOG2);
+          // 3. filter the noise by using one or more morphological filters 
+          Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+          cv:erode(fgMaskMOG2, filterFrame, kernel);
+          cv::dilate(filterFrame, filterFrame, kernel);
+          cv::GaussianBlur(filterFrame, filterFrame, Size(), 2);
+          // 4. apply a threshold to better define the fore ground  
+          cv::threshold(filterFrame, thresholdFrame, 50, 255, cv::THRESH_BINARY);
+          // 5. if needed, use one ore more morphological filters to improve the fore ground definition
+          // 6. find a way to track the cars using the camshift algorithm (hint: implement an object to handle the tracker)
+          Rect copyTrackWindowLeft = trackWindowLeft;
+          Rect copyTrackWindowRight = trackWindowRight;
+          RotatedRect TrackBoxLeft = CamShift(thresholdFrame, copyTrackWindowLeft,
+            TermCriteria(TermCriteria::EPS | TermCriteria::COUNT, 10, 1));
+          RotatedRect TrackBoxRight = CamShift(thresholdFrame, copyTrackWindowRight,
+            TermCriteria(TermCriteria::EPS | TermCriteria::COUNT, 10, 1));
+          // 7. extract the requested information (number of vehicles, number of vehicles for each direction, timestamp, color)
+          // 8. save ONE Nj for the vehicle with the requested information written on
+          if (TrackBoxLeft.size.width > 0 && xLeft <= TrackBoxLeft.center.x) {
+            cntLeft = 0;
+            trackWindowLeft = TrackBoxLeft.boundingRect();
+            xLeft = TrackBoxLeft.center.x;
+            if (TrackBoxLeft.center.x > 300) {
+              // Obtaining color to parse
+              Mat frameAuto = frame(trackWindowLeft);
+              Mat filteredAuto = filterFrame(trackWindowLeft);
+              Scalar color = mean(frameAuto, filteredAuto);
+              // Construction of a color class
+              Color autoColor{ int(color[0]),int(color[1]),int(color[2])};
+              // Cloning frame to save image
+              Mat clone = frame.clone();
+              // Regnognization of a color and construction of image's label
+              ostringstream str;
+              str << "Frame: " << frameNumber << " , Color: " << autoColor.label() << " from left to right";
+              putText(clone, str.str(), Point(10, 30), FONT_ITALIC, 0.4, cvScalar(0, 0, 255));
+              string name = "./fromLeft" + to_string(cntAutoLeft) + ".jpg";
+              imwrite(name, clone);
+              // Setting starter parameters
+              trackWindowLeft = Rect(60, 170, 100, 100);
+              xLeft = 70;
+              // Incrementation of the auto detected variable
+              cntAutoLeft++;
+            }
+          }
+          if (cntLeft > 3) {
+            trackWindowLeft = Rect(60, 170, 100, 100);
+            xLeft = 70;
+          }
+          if (TrackBoxRight.size.width > 0 && xRight >= TrackBoxRight.center.x) {
+            cntRight = 0;
+            trackWindowRight = TrackBoxRight.boundingRect();
+            xRight = TrackBoxRight.center.x;
+            if (TrackBoxRight.center.x < 600) {
+              // Obtaining color to parse
+              Mat frameAuto = frame(trackWindowLeft);
+              Mat filteredAuto = filterFrame(trackWindowLeft);
+              Scalar color = mean(frameAuto, filteredAuto);
+              // Construction of a color class
+              Color autoColor{ int(color[0]),int(color[1]),int(color[2]) };
+              // Cloning frame to save image
+              Mat clone = frame.clone();
+              // Regnognization of a color and construction of image's label
+              ostringstream str;
+              str << "Frame: " << frameNumber << " , Color: " << autoColor.label() << " from right to left";
+              putText(clone, str.str(), Point(10, 30), FONT_ITALIC, 0.4, cvScalar(0, 0, 255));
+              string name = "./fromRight" + to_string(cntAutoRight) + ".jpg";
+              imwrite(name, clone);
+              // Setting starter parameters
+              trackWindowRight = Rect(810, 130, 100, 100);
+              xRight = 830;
+              // Incrementation of the auto detected variable
+              cntAutoRight++;
+            }
+          }
+          if (cntRight > 3) {
+            trackWindowRight = Rect(810, 120, 100, 100);
+            xRight = 830;
+          }
+          rectangle(frame, trackWindowLeft, Scalar(0, 0, 255), 3, LINE_AA);
+          rectangle(frame, trackWindowRight, Scalar(0, 255, 0), 3, LINE_AA);
+          cntLeft++;
+          cntRight++;
+          imshow("Tracking", frame);
+          if (waitKey(40) >= 0) break;
+        }
+        return 0;
+      }
+    \end{minted}
+    \subsection{Audio (Dial Tones)}
+    \begin{minted}[xleftmargin=-15pt,breaklines]{cpp}
+            class Tone {
+      public:
+        Tone(int num, float min, float max, std::string val) :numero{ num }, minValue{ min }, maxValue{ max }, valore{ val } {}
+        Tone() {}
+        bool lookup(float buffer[]) {
+          if (buffer[(int)(minValue / (8000 / 1024.0))] > -30 && buffer[(int)(maxValue / (8000 / 1024.0))] > -30)
+            return true;
+          return false;}
+        int getNumero() {
+          return numero;}
+        char decode(int repetitions) {
+          return valore.at(repetitions - 1);}
+      private:
+        int numero; float minValue; float maxValue; std::string valore;};
+
+      int main(int argc, char **argv){
+        int i = 0;  
+        if (argc != 2) {
+          std::cerr << "Missing input audio file to analyze." << std::endl;
+          return 1;}
+        File input = File::getCurrentWorkingDirectory().getChildFile(argv[1]);
+        if (input.exists() == false) {
+          std::cerr << "File doesn't exists." << std::endl;}
+        AudioFormatManager fmgr;
+        fmgr.registerBasicFormats();
+        ScopedPointer<AudioFormatReaderSource> source = new AudioFormatReaderSource(fmgr.createReaderFor(input), true);
+        unsigned int numChannels = source->getAudioFormatReader()->numChannels;
+        double sampleRate = source->getAudioFormatReader()->sampleRate;
+        std::cout << "Channels=" << numChannels << " sampleRate=" << (int)sampleRate << std::endl;
+        AudioBuffer<float> myBuffer(numChannels, sampleRate / 10);
+        AudioSourceChannelInfo info(myBuffer);
+        source->prepareToPlay(512, sampleRate);
+        const int FFTsize = 1024;// perchè voglio campionare circa 4 Hz ed devo usare il doppio
+        float buffer[2 * FFTsize];
+        CircularBuffer<float> circular{ FFTsize, 128 };
+        Tone t0{ 0,941,1336 ," " };
+        Tone t1{ 1,697,1209, " " };
+        Tone t2{ 2, 697,1336,"ABC" };
+        //tutti gli altri toni associati agli hz della tabella
+        Tone vet[10] = {t0,t1,t2,t3,t4,t5,t6,t7,t8,t9};
+        int num = -1;
+        Tone ultimoTono{};
+        int contTemp = 0; int numeroRep = 0;  std::string messaggio = "";
+        while (source->getNextReadPosition() < source->getTotalLength()) {
+          // Read next audio block
+          source->getNextAudioBlock(info);
+          const int numSamples = info.buffer->getNumSamples();
+          const int numChannels = info.buffer->getNumChannels();
+          const float **data = info.buffer->getArrayOfReadPointers();
+          bool finito = false;
+          // loop through each channel
+          for (int channel = 0; channel < numChannels; channel++) {
+            // channelData contains now 'numSamples' of input data
+            const float *channelData = data[channel];
+          //TODO implement you algorithm! The following example dumps to stdout the audio contents
+            std::cout << "Channel=" << channel << " numSamples=" << numSamples << std::endl;
+            for (int sampleIndex = 0; sampleIndex < numSamples; sampleIndex++) {
+              if (circular.process(channelData[sampleIndex])) {
+                circular.copyData(buffer);
+                MyFilter<float> filtro{ 690, 1650, sampleRate };
+                dsp::FFT tras{ 10 };
+                filtro.process(buffer, 2 * FFTsize);
+                tras.performFrequencyOnlyForwardTransform(buffer);
+                //il buffer ora contiene le frequenze e la fase
+                buffer[0] = 20.0f * log10f(buffer[0] / (float)FFTsize / 2.0f);
+                for (int i = 1; i < FFTsize / 2; i++) {
+                  buffer[i] = 20.0f * log10f((2.0f * buffer[i]) / (float)FFTsize / 2.0f);}
+                bool found = false;
+                std::cout << "Numero:" << std::endl;
+                for (int i = 0; i < 10; i++) {
+                  if (vet[i].lookup(buffer)) {
+                    std::cout << vet[i].getNumero() << std::endl;
+                    if (num == -1) {
+                      numeroRep = 0;
+                      num = vet[i].getNumero();}
+                    if (contTemp > 3) {
+                      numeroRep++;}
+                    ultimoTono = vet[i];
+                    found = true;
+                    contTemp = 0;}}
+                if(found==false&& contTemp>10 && num!=-1){
+                  contTemp=0;
+                  messaggio.push_back(ultimoTono.decode(numeroRep));
+                  num = -1;}
+                if (found == false) {
+                  contTemp++;}
+                std::cout << std::endl;}}}
+          std::cout << std::endl;}
+      std::cout << "messaggio trovato: " << messaggio << std::endl;
+        return 0;}
+    \end{minted}
+    \subsection{Gstreamer}
+    \begin{minted}[xleftmargin=-15pt,breaklines]{text}
+      Generare segnale audio:audiotestsrc wave=0 freq=440 ! audioconvert ! autoaudiosink
+      Generare video con pattern diversi: videotestsrc pattern=0 ! videoconvert ! autovideosink
+      Lettura file e riproduzione Audio/video con bin: playbin uri=file:/tmp/BigBuckBunny_320x180.mp4
+      Solo video con filesrc: filesrc location=/tmp/BigBuckBunny_320x180.mp4 ! decodebin ! videoconvert ! autovideosink
+      Audio/video con filesrc: filesrc location=/tmp/BigBuckBunny_320x180.mp4 ! decodebin name=dec dec.src_0 ! videoconvert ! autovideosink dec.src_1 ! audioconvert ! autoaudiosink
+      Codifica del video in formato H264
+      Solo video: filesrc location=/tmp/BigBuckBunny_320x180.mp4 ! decodebin ! videoconvert ! x264enc ! avdec_h264 ! videoconvert ! autovideosink
+      Audio/video: filesrc location=/tmp/BigBuckBunny_320x180.mp4 ! decodebin name=dec dec.src_0 ! videoconvert ! x264enc ! avdec_h264 ! videoconvert ! autovideosink dec.src_1 ! audioconvert ! autoaudiosink
+      Streaming di video:
+      Sender: location=/tmp/BigBuckBunny_320x180.mp4 ! decodebin ! videoconvert ! x264enc ! rtph264pay ! udpsink host=127.0.0.1 port=5000
+      Receiver: udpsrc port=5000 ! application/x-rtp, media=video, encoding-name=H264, clock-rate=90000 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink
+    \end{minted}
 \end{multicols}
 \end{document}
