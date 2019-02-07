@@ -653,6 +653,79 @@ tabsize=2
 
     \section{Introduzione GPU e CUDA}
 
+    \subsection{Legge di Moore}
+    \textit{"Il numero di transistor nei circuiti integrati raddoppia circa ogni 18 mesi"}
+    \subsection{Ostacoli tecnici}
+    Vi sono principalmente 3 ostacoli quando si vuole progettare un hardware efficiente:
+    \begin{itemize}
+      \item Memory wall: crescente divario tra la velocità di processore e memoria.
+      \item ILP wall: (Instruction Level Parallelism) aumentando il numero di core dei 
+      processori cresce la difficoltà nel programmarli.
+      \item Power wall: aumentando la potenza aumenta anche il consumo di energia e
+      di conseguenza la produzione di calore.
+    \end{itemize}
+
+    \subsection{Accelerazione hardware}
+    Designare l'HW per risolvere problemi specifici. L'esempio più comune è la GPU. 
+    La tecnica più utilizzata per sfruttare questi accelleratori è l'\textit{heterogeneous 
+    computing}.\\
+    \textbf{Heterogeneous computing} Gestire i compiti da eseguire e attribuendoli all'
+    HW corretto (CPU/GPU).
+
+    \subsection{GPU}
+    Componenti HW che eseguono al meglio operazioni simili tra loro (immagine mentale
+    $\rightarrow$ un "esercito di soldati" che eseguono la stessa operazione). Le 
+    caratteristiche tipiche di una GPU sono:
+    \begin{itemize}
+      \item Le GPU sono processori specializzati con memoria dedicata e con un design 
+      multi-core ottimizzato per SIMD(Single Instruction Multiple Data) e FPU(Floating
+      Point Unit).
+      \item Le GPU dedicano proporzionalmente più transistor alle unità aritmetiche/
+      logiche e meno alla cache e al controllo di flusso in confronto a una CPU 
+      (no branch prediction/speculative execution, etc.). Le GPU hanno 
+      in genere anche una memoria DRAM più veloce.
+      \item Le GPU hanno un'architettura di throughput parallela per ottimizzare 
+      l'esecuzione di molti thread simultanei lentamente, piuttosto che eseguirne uno 
+      solo molto rapidamente.
+    \end{itemize}
+    \subsection{Tensor Core}
+    Teconologia rivoluzionaria che ottimizza le tecniche di deep learning.
+    \subsection{Programmare la GPU}
+    Nozioni: \\
+    \textbf{Host} La CPU e la sua memoria (memoria host) \\
+    \textbf{Device} La GPU e la sua memoria (memoria device)
+
+    \subsection{CUDA}
+    Compute Unified Device Architecture è una piattaforma di calcolo parallelo e che 
+    adotta un modello di programmazione inventato da NVIDIA il quale consente di 
+    sfruttare la potenza delle GPU Nvidia. Sfrutta l'architettura SIMT (Single
+    Instruction Multiple Threads).
+    \subsubsection{Modello di programmazione CUDA}
+    \f{cuda-flow}
+    \subsubsection{Memoria Unificata}
+    La memoria unificata è un sistema di gestione della memoria che semplifica lo 
+    sviluppo della GPU fornendo un unico spazio di memoria direttamente accessibile 
+    da tutte le GPU e CPU nel sistema. La migrazione delle pagine tra memoria host
+    e memoria device serve a ridurre la latenza della memoria.
+    \subsubsection{Kernel}
+    Possiamo definire come kernel una funzione che esegue sulla GPU richiamata 
+    dall’host. Quidni l’esecuzione su GPU avviene tramite i kernel che sono 
+    programmati sfruttando CUDA. Ogni kernel deve eseguire il minor lavoro possibile. 
+    \subsubsection{Esecuzione Del Kernel}
+    Il multiprocessore crea, gestisce, schedula ed esegue i thread in gruppi da 
+    32 chiamati wraps. Ogni singolo thread che costituisce un wrap parte dallo 
+    stesso punto nel programma. Tuttavia, i thread hanno il proprio address counter 
+    e il proprio stato dei registri, quindi eseguono in modo indipendente. I thread 
+    sono raggruppati in wraps sempre allo stesso modo. Ogni wrap contiene i thread in 
+    ordine partendo dal thread con id 0. I blocchi rimangono in esecuzione finche ogni 
+    thread non ha finito il suo lavoro. Un singolo wrap esegue in modo efficiente solo 
+    se tutti i thread che lo compongono eseguono le stesse istruzioni nello stesso 
+    momento, se uno o più thread cambiano “il ramo di esecuzione” in seguito ad una 
+    condizione (if) i thread vengono separati e disabilitati per poi essere eseguiti 
+    in modo seriale. Se durante l’esecuzione di un wrap è richiesto a più thread di 
+    eseguire un’operazione atomica sulla stessa area di memoria questa operazione 
+    verrà eseguita in modo seriale in ordine casuale.
+    \f{kernel-exec}
     \section{Programmare le GPU con CUDA}
 
     \section{Video Processing e Computer Vision}
@@ -796,7 +869,7 @@ tabsize=2
     Generazione segnali audio di test:\\
     \textbf{audiotestsrc} -> generatore di suoni (utilizzato per testare delle pipelines audio).
     Il tipo di suono è scelto utilizzando la proprietà wave\\
-    
+    \noindent
     Audio adapters:\\
     \textbf{audioconvert} -> converte dei dati audio raw in vari formati\\
     \textbf{audioresample} -> esegue una conversione di sample rate\\
@@ -807,19 +880,19 @@ tabsize=2
     Generazione video di test:\\
     \textbf{videotestsrc} -> generatore di pattern video (utilizzato per testare delle pipelines
     video). Il tipo di pattern è scelto utilizzando la proprietà pattern\\
-    
+    \noindent
     Video adapters:\\
     \textbf{videoconvert} -> converte da un color space ad un altro (ad esempio da RGB a YUV)\\
     \textbf{videorate} -> esegue una conversione di sample rate (eliminando o duplicando dei frames)\\
     \textbf{videoscale} -> ridimensiona il video\\
-
+    \noindent
     Visualizzazione dei media:
     \textbf{autovideosink} -> seleziona automaticamente la device di riproduzione del video
 
     \subsection{Elementi utili}
 
     \textbf{Bins}: elementi in grado di costruire dinamicamente una pipeline in base alle informazioni estratte dal media\\
-    
+    \noindent
     \textbf{playbin} -> gestisce tutti gli aspetti di riproduzione di un media (dalla lettura, alla decodifica fino alla riproduzione)\\
     \textbf{uridecodebin} -> decodifica i dati ricevuti da un URI fino ad ottenere dei dati raw\\
     \textbf{decodebin} -> decodifica i dati in entrata fino ad ottenere dei dati raw
@@ -830,18 +903,18 @@ tabsize=2
     \textbf{filesink} -> scrive i dati in input su di un file\\
 
     \subsection{Gst tools} 
-
+    
     \textbf{gst-inspect-1.0} -> Mostra una lista di tutti gli elementi disponibili\\
-    
+    \noindent
     \textbf{gst-inspect-1.0 [PLUGIN | ELEMENT]} -> Mostra le info disponibili per il plugin/elemento selezionato.\\
-    
+    \noindent
     \textbf{gst-launch-1.0 PIPELINE\_DESCRIPTION} -> Tool per creare ed eseguire una pipeline
     Utilizzando l’opzione -v si attiva il supporto verbose\\
     
     \subsection{Debug} 
     
     \textbf{GST\_DEBUG} -> Variabile d’ambiente utilizzata per specificare il livello di debug desiderato\\
-    
+    \noindent
     Level 	Name 	Description\\
     0       none	No debug information is output.\\
     1       ERROR Logs all fatal errors.\\
@@ -849,7 +922,7 @@ tabsize=2
     4       INFO 	Logs all informational messages.\\
     5       DEBUG Logs all debug messages.\\
     6       LOG   Logs all log messages.\\
-    
+    \noindent
     \textbf{GST\_DEBUG\_DUMP\_DOT\_DIR} ->  Variabile d’ambiente utilizzata per specificare la path dove salvare il grafico della pipeline
     
 
