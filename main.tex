@@ -704,8 +704,81 @@ tabsize=2
     \section{Audio e Video Streaming}
 
     \section{Gstreamer}
+    \begin{itemize}
+     \item Framework open source per la creazione di applicazioni multimediali
+     \item Piattaforma altamente modulare sviluppata in C
+     \item Multi-platform: Linux-kernel based, Android, MacOS, iOS, Windows
+     \item Esistono dei bindings per vari linguaggi: ad esempio Python, C++, Perl, Ruby, C#, …
+     \item Utilizzabile anche da linea di comando
+     \item Utilizza un’architettura a plug-ins
+     \item Molti elementi quali codecs, container formats, input e output drivers ed effetti sono forniti al momento dell’installazione
+     \item Possibilità di sviluppare ulteriori plug-ins utilizzando il linguaggio C
+    \end{itemize}
+    \textbf{Elemento} è il componente base di una pipeline, ha delle proprietà alle queali si possono assegnare dei valori.
+    3 elementi di base: source, filter e sink \\
+    \textbf{Pipelines} insiemi di elementi collegati sequenzialmente. \\
+    Pipeline di base -> almeno una source, almeno un sink e uno o più elementi filter 
+    descritta da una serie di caratteri separati da !
+    \subsection{Elementi (audio)}
+    Generazione segnali audio di test:\\
+    \textbf{audiotestsrc} -> generatore di suoni (utilizzato per testare delle pipelines audio).
+    Il tipo di suono è scelto utilizzando la proprietà wave\\
+    
+    Audio adapters:\\
+    \textbf{audioconvert} -> converte dei dati audio raw in vari formati\\
+    \textbf{audioresample} -> esegue una conversione di sample rate\\
+    Ascolto di audio:\\
+    \textbf{autoaudiosink} -> seleziona automaticamente la device di riproduzione dell’audio
 
+    \subsection{Elementi (video)}
+    Generazione video di test:\\
+    \textbf{videotestsrc} -> generatore di pattern video (utilizzato per testare delle pipelines
+    video). Il tipo di pattern è scelto utilizzando la proprietà pattern\\
+    
+    Video adapters:\\
+    \textbf{videoconvert} -> converte da un color space ad un altro (ad esempio da RGB a YUV)\\
+    \textbf{videorate} -> esegue una conversione di sample rate (eliminando o duplicando dei frames)\\
+    \textbf{videoscale} -> ridimensiona il video\\
 
+    Visualizzazione dei media:
+    \textbf{autovideosink} -> seleziona automaticamente la device di riproduzione del video
+
+    \subsection{Elementi utili}
+
+    \textbf{Bins}: elementi in grado di costruire dinamicamente una pipeline in base alle informazioni estratte dal media\\
+    
+    \textbf{playbin} -> gestisce tutti gli aspetti di riproduzione di un media (dalla lettura, alla decodifica fino alla riproduzione)\\
+    \textbf{uridecodebin} -> decodifica i dati ricevuti da un URI fino ad ottenere dei dati raw\\
+    \textbf{decodebin} -> decodifica i dati in entrata fino ad ottenere dei dati raw
+    
+    \subsection{File input / output}
+    
+    \textbf{filesrc} -> legge i dati presenti in un file\\
+    \textbf{filesink} -> scrive i dati in input su di un file\\
+
+    \subsection{Gst tools} 
+
+    \textbf{gst-inspect-1.0} -> Mostra una lista di tutti gli elementi disponibili\\
+    
+    \textbf{gst-inspect-1.0 [PLUGIN | ELEMENT]} -> Mostra le info disponibili per il plugin/elemento selezionato.\\
+    
+    \textbf{gst-launch-1.0 PIPELINE_DESCRIPTION} -> Tool per creare ed eseguire una pipeline
+    Utilizzando l’opzione -v si attiva il supporto verbose\\
+    
+    \subsection{Debug} 
+    
+    \textbf{GST_DEBUG} -> Variabile d’ambiente utilizzata per specificare il livello di debug desiderato\\
+    
+    Level 	Name 	Description\\
+    0       none	No debug information is output.\\
+    1       ERROR Logs all fatal errors.\\
+    2       WARNING Logs all warnings.\\
+    4       INFO 	Logs all informational messages.\\
+    5       DEBUG Logs all debug messages.\\
+    6       LOG   Logs all log messages.\\
+    
+    \textbf{GST_DEBUG_DUMP_DOT_DIR} ->  Variabile d’ambiente utilizzata per specificare la path dove salvare il grafico della pipeline
+    
 
     \section{Machine Learning}
     Campo dell'informatica con l'obiettivo di sviluppare funzionalità per rendere
